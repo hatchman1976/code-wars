@@ -1,11 +1,9 @@
 package kata
 
 import "math"
-//import "fmt"
 
-
-func IsPrime(value int) bool {
-	for i := 2; i <= int(math.Floor(float64(value) / 2)); i++ {
+func IsPrimeSqrt(value int) bool {
+	for i := 2; i <= int(math.Floor(math.Sqrt(float64(value)))); i++ {
 		if value%i == 0 {
 			return false
 		}
@@ -17,11 +15,10 @@ func Step(g, m, n int) []int {
 
 	for ; m < n; m++ {
 
-		if IsPrime(m) {
-			for i := m + 1; i - m <= g; i++ {
-				if IsPrime(i) && i - m == g {
-					//Pairs have been found
-					return []int {m, i}
+		if m%2 != 0 {
+			if (m + g) <= n {
+				if IsPrimeSqrt(m) && IsPrimeSqrt(m+g) {
+					return []int{m, m + g}
 				}
 			}
 		}
