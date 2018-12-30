@@ -1,7 +1,7 @@
 package kata
 
 import "math"
-
+//import "fmt"
 
 
 func IsPrime(value int) bool {
@@ -15,32 +15,16 @@ func IsPrime(value int) bool {
 
 func Step(g, m, n int) []int {
 
-	 var primeCount = make([]int, n - m)
+	for ; m < n; m++ {
 
-	 i := 0
-	 for  ; m <= n; m++ {
-		 if IsPrime(m) {
-			primeCount[i] = m
-			i++
-		 }
-	 }
-
-	 var primeActual = make([]int, i)
-
-	 for i = 0; i < len(primeActual); i++ {
-		 primeActual[i] = primeCount[i]
-	 }
-
-	 primeCount = nil
-
-
-	for k := range primeActual {
-		for l := range primeActual {
-			if primeActual[l] - primeActual[k] == g {
-				return []int {primeActual[k], primeActual[l]}
+		if IsPrime(m) {
+			for i := m + 1; i - m <= g; i++ {
+				if IsPrime(i) && i - m == g {
+					//Pairs have been found
+					return []int {m, i}
+				}
 			}
 		}
 	}
-
 	return nil
 }
