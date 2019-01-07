@@ -4,8 +4,8 @@ import (
 	"fmt"
 	//"strconv"
 	"math"
-	"sync"
 	"math/big"
+	"sync"
 )
 
 func RoundDown(input float64, places int) (newVal float64) {
@@ -17,41 +17,45 @@ func RoundDown(input float64, places int) (newVal float64) {
 	return
 }
 
-func CalculateFactorial(i int64) *big.Int {
+func CalculateFactorial(i float64) *big.Float {
 
 	if i <= 0 {
-		return big.NewInt(1)
+		return big.NewFloat(1)
 	}
-	returnVal := CalculateFactorial(i-1)
+	returnVal := CalculateFactorial(i - 1)
 
-	return new(big.Int).Mul(big.NewInt(i), returnVal)
+	return new(big.Float).Mul(big.NewFloat(i), returnVal)
 }
 func Going(n int) float64 {
 	// your code
-	results := make([]big.Int, n)
+	results := make([]big.Float, n)
 
-	 wg := sync.WaitGroup{}
+	wg := sync.WaitGroup{}
 	wg.Add(n)
-	
-	var i int64
+
 	for i := 1; i <= n; i++ {
-		go func(i int64) {
+		go func(i float64) {
 			defer wg.Done()
 			returnVal := CalculateFactorial(i)
-			results[i-1] = *returnVal
-		}(int64(i))
+			results[int(i)-1] = *returnVal
+		}(float64(i))
 	}
 	wg.Wait()
 
-	//fmt.Println(results)
+	fmt.Println(results)
 
-	factorialSum := big.NewInt(0)
+	floatReturn := new(big.Float)
 	for _, j := range results {
-		factorialSum.Add(factorialSum, &j)
+		floatReturn.Add(floatReturn, &j)
 	}
 
-	fmt.Println(n, factorialSum)
+	floatCalc := new(big.Float)
+	floatCalc.Quo(big.NewFloat(1), &results[n-1])
+	floatReturn.Mul(floatReturn, floatCalc)
+	floatReturn.SetPrec(10)
+	fmt.Println(floatReturn)
 
- 	factorialSum.Mul(factorialSum.Div(big.NewInt(1), factorialSum), factorialSum)
+valr, _ := floatReturn.Float64()
+	return valr
 
 }
