@@ -3,59 +3,44 @@ package kata
 import (
 	"fmt"
 	//"strconv"
-	"math"
+
 	"math/big"
 	"sync"
+
+	"github.com/shopspring/decimal"
 )
 
-func RoundDown(input float64, places int) (newVal float64) {
-	var round float64
-	pow := math.Pow(10, float64(places))
-	digit := pow * input
-	round = math.Floor(digit)
-	newVal = round / pow
-	return
-}
-
-func CalculateFactorial(i float64) *big.Float {
+func CalculateFactorial(i int64) decimal.Decimal {
 
 	if i <= 0 {
-		return big.NewFloat(1)
+		returnVal, _ := decimal.NewFromString("1")
+		return returnVal
 	}
 	returnVal := CalculateFactorial(i - 1)
-
-	return new(big.Float).Mul(big.NewFloat(i), returnVal)
+	
+	return  decimal.New(i, 0).Mul(returnVal)
 }
 func Going(n int) float64 {
 	// your code
-	results := make([]big.Float, n)
+	results := make([]decimal.Decimal, n)
 
 	wg := sync.WaitGroup{}
 	wg.Add(n)
 
 	for i := 1; i <= n; i++ {
-		go func(i float64) {
+		go func(i int64) {
 			defer wg.Done()
 			returnVal := CalculateFactorial(i)
-			results[int(i)-1] = *returnVal
-		}(float64(i))
+			results[i-1] = returnVal
+		}(int64(i))
 	}
 	wg.Wait()
 
 	fmt.Println(results)
 
-	floatReturn := new(big.Float)
-	for _, j := range results {
-		floatReturn.Add(floatReturn, &j)
+	calculatedFact := new(big.Int)
+	for i, j := range results {
+
 	}
-
-	floatCalc := new(big.Float)
-	floatCalc.Quo(big.NewFloat(1), &results[n-1])
-	floatReturn.Mul(floatReturn, floatCalc)
-	floatReturn.SetPrec(10)
-	fmt.Println(floatReturn)
-
-valr, _ := floatReturn.Float64()
-	return valr
 
 }
